@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+
+<style type="text/css">
+.cb { clear: both; }
+.exp-cell { float: left; padding: 5px; }
+</style>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/underscore/underscore-min.js"></script>
+
+<script src="js/views.js"></script>
+<script src="js/core.js"></script>
+
+<script type="text/javascript">
+// TODO I'm supposing that every exp is seen from every user: I should add a "visibility" parameter to each exp
+var expPercs = [
+		// Good
+		{A:0.5,B:0.7},
+		{A:0.6,B:0.9},
+		{A:0.7,B:0.9},
+		// Bad
+		{A:0.7,B:0.6},
+		{A:0.9,B:0.6},
+		{A:0.8,B:0.6},
+		// Same
+		{A:0.5,B:0.5}
+	];
+
+$(function(){
+	var params = {
+			users: 1000
+			// TODO
+			// number of experiments
+			// typology of experiments (good, bad, same)
+			// quality of A version (low value==fix, high value==improvement)
+		};
+	//var expResults = simulate(params, expPercs);
+	//resultsView(expResults);
+	$container = $('#container');
+	var expData = doIterations(params, expPercs, 100);
+
+	var statisticsData = statisticAnalysis(expData, 10);
+
+	console.log(statisticsData.frequencies);
+	
+	// TODO Calculate diff and liability (variance?) of AB test
+})
+</script>
+
+</head>
+<body>
+
+<div id="container"></div>
+
+</body>
+</html>

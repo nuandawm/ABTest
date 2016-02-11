@@ -1,0 +1,25 @@
+{
+  "name": "ABTest",
+  "authors": [
+    "Nuanda WM <derossi.giuliano@gmail.com>"
+  ],
+  "description": "Analysis of AB test liability",
+  "main": "index.html",
+  "moduleType": [
+    "es6"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.2.0",
+    "underscore": "^1.8.3"
+  }
+}
