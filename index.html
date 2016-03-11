@@ -5,12 +5,14 @@
 <title>Insert title here</title>
 
 <style type="text/css">
-.cb { clear: both; }
-.exp-cell { float: left; padding: 5px; }
+	.cb { clear: both; }
+	.exp-cell { float: left; padding: 5px; }
+	.bar { fill: steelblue; }
 </style>
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/underscore/underscore-min.js"></script>
+<script src="bower_components/d3/d3.min.js"></script>
 
 <script src="js/views.js"></script>
 <script src="js/core.js"></script>
@@ -46,6 +48,30 @@ $(function(){
 	var statisticsData = statisticAnalysis(expData, 10);
 
 	console.log(statisticsData.frequencies);
+
+	var width = 600, height = 400;
+
+	var svg = d3.select('body').append('svg')
+			.attr('width', width)
+			.attr('height', height);
+	var xDomain = [];
+	for (var i in statisticsData.frequencies)
+		xDomain.push(statisticsData.frequencies[i].x);
+	var x = d3.scale.ordinal()
+			.domain(xDomain)
+			.rangeRoundBands([0, width], .3);
+	var y = d3.scale.linear()
+			.domain([0, statisticsData.maxFrequency])
+			.range([height, 0]);
+
+	svg.selectAll('.bar')
+			.data(statisticsData.frequencies)
+		.enter().append('rect')
+			.attr('class','bar')
+			.attr("x", function(d) { return x(d.x); })
+			.attr("width", x.rangeBand())
+			.attr("y", function(d){ return y(d.y) })
+			.attr("height", function(d) { return height - y(d.y); });
 	
 	// TODO Calculate diff and liability (variance?) of AB test
 })

@@ -70,6 +70,7 @@ var statisticAnalysis = function(expData, intervals){
   var counter = 0;
   var index = 0;
   var frequencies = [];
+  var maxFrequency = 0;
   for (var i in sortedData) {
     if (sortedData[i].ratio >= (min + index*intervalWidth) && sortedData[i].ratio < (min + (index+1)*intervalWidth))
       counter += 1;
@@ -79,6 +80,9 @@ var statisticAnalysis = function(expData, intervals){
         x: min + (index+0.5)*intervalWidth,
         y: counter
       });
+
+      if (maxFrequency<counter)
+          maxFrequency = counter;
       counter = 0;
     }
   }
@@ -87,7 +91,8 @@ var statisticAnalysis = function(expData, intervals){
     mean: sum/expData.length,
     max: max,
     min: min,
-    frequencies: frequencies
+    frequencies: frequencies,
+    maxFrequency: maxFrequency
   };
 };
 
