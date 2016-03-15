@@ -1,51 +1,17 @@
 // Tests - number of books must be equals to sum of books of A and B for each exp
-var expResults = [];
-
-var likeExp = function (exp,version) {
-  return (Math.random()<=exp[version]);
-};
-
-var book = function (expPercs) {
-  var pattern = [];
-  var booked = true;
-  for (var i in expPercs) {
-    var version = (Math.random()>=0.5) ? 'A' : 'B';
-    expResults[i][version].visits += 1;
-    pattern.push(version);
-    if (!likeExp(expPercs[i], version))
-      booked = false;
-  }
-  
-  if (booked) {
-    for (var i in expResults)
-      expResults[i][pattern[i]].books += 1;
-    return true;
-  }
-  else
-    return false;
-};
-
-var simulate = function (params, expPercs) {
-  // Clear expResults
-  expResults = [];
-  for (var i in expPercs) {
-    expResults.push({
-      A: {visits:0, books:0},
-      B: {visits:0, books:0}
-    });
-  }
-  
-  for (var i=0; i<params.users; i++) {
-    book(expPercs);
-  }
-  
-  return expResults;
-};
-
+/**
+ * Simulates several itereations of the same set of experiments and returns the A and B conversion and
+ * the ratio between A and B of the first experiment inserted
+ * @param params
+ * @param expPercs
+ * @param num
+ * @returns {Array}
+ */
 var doIterations = function(params, expPercs, num){
   var expData = [];
   for (var i=0; i<num; i++) {
-    var expResult = simulate(params, expPercs);
+    var sprint = new Sprint(params, expPercs);
+    var expResults = sprint.simulate();
     var Aconversion = calculateConversion(expResults[0]['A'].visits,expResults[0]['A'].books);
     var Bconversion = calculateConversion(expResults[0]['B'].visits,expResults[0]['B'].books);
     expData.push({

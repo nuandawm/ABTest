@@ -14,6 +14,7 @@
 <script src="bower_components/underscore/underscore-min.js"></script>
 <script src="bower_components/d3/d3.min.js"></script>
 
+<script src="js/models/Sprint.js"></script>
 <script src="js/views.js"></script>
 <script src="js/core.js"></script>
 
@@ -21,7 +22,7 @@
 // TODO I'm supposing that every exp is seen from every user: I should add a "visibility" parameter to each exp
 var expPercs = [
 		// Good
-		{A:0.5,B:0.7},
+		{A:0.5,B:0.3},
 		{A:0.6,B:0.9},
 		{A:0.7,B:0.9},
 		// Bad
@@ -29,12 +30,13 @@ var expPercs = [
 		{A:0.9,B:0.6},
 		{A:0.8,B:0.6},
 		// Same
+		{A:0.5,B:0.5},
 		{A:0.5,B:0.5}
 	];
 
 $(function(){
 	var params = {
-			users: 1000
+			users: 60000
 			// TODO
 			// number of experiments
 			// typology of experiments (good, bad, same)
@@ -42,14 +44,15 @@ $(function(){
 		};
 	//var expResults = simulate(params, expPercs);
 	//resultsView(expResults);
-	$container = $('#container');
-	var expData = doIterations(params, expPercs, 100);
+	//var $container = $('#container');
+	var observedExpData = doIterations(params, expPercs, 5);
 
-	var statisticsData = statisticAnalysis(expData, 10);
+	console.log(observedExpData);
 
-	console.log(statisticsData.frequencies);
+	/*var statisticsData = statisticAnalysis(expData, 10);
+	console.log(statisticsData.frequencies);*/
 
-	var width = 600, height = 400;
+	/*var width = 600, height = 400;
 
 	var svg = d3.select('body').append('svg')
 			.attr('width', width)
@@ -71,7 +74,7 @@ $(function(){
 			.attr("x", function(d) { return x(d.x); })
 			.attr("width", x.rangeBand())
 			.attr("y", function(d){ return y(d.y) })
-			.attr("height", function(d) { return height - y(d.y); });
+			.attr("height", function(d) { return height - y(d.y); });*/
 	
 	// TODO Calculate diff and liability (variance?) of AB test
 })
