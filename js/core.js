@@ -10,15 +10,18 @@
 var doIterations = function(params, expPercs, num){
   var expData = [];
   for (var i=0; i<num; i++) {
-    var sprint = new Sprint(params, expPercs);
-    var expResults = sprint.simulate();
-    var Aconversion = calculateConversion(expResults[0]['A'].visits,expResults[0]['A'].books);
-    var Bconversion = calculateConversion(expResults[0]['B'].visits,expResults[0]['B'].books);
-    expData.push({
-      Aconversion: Aconversion,
-      Bconversion: Bconversion,
-      ratio: (Bconversion/Aconversion)
+    var dataPromise = new Promise(function(resolve){
+      var sprint = new Sprint(params, expPercs);
+      var expResults = sprint.simulate();
+      var Aconversion = calculateConversion(expResults[0]['A'].visits,expResults[0]['A'].books);
+      var Bconversion = calculateConversion(expResults[0]['B'].visits,expResults[0]['B'].books);
+      resolve({
+        Aconversion: Aconversion,
+        Bconversion: Bconversion,
+        ratio: (Bconversion/Aconversion)
+      });
     });
+    expData.push(dataPromise);
   }
   return expData;
 };

@@ -8,11 +8,13 @@
 	.cb { clear: both; }
 	.exp-cell { float: left; padding: 5px; }
 	.bar { fill: steelblue; }
+	#container { width: 200px; height: 200px; }
 </style>
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/underscore/underscore-min.js"></script>
 <script src="bower_components/d3/d3.min.js"></script>
+<script src="bower_components/progressbar.js/dist/progressbar.min.js"></script>
 
 <script src="js/models/Sprint.js"></script>
 <script src="js/views.js"></script>
@@ -36,7 +38,7 @@ var expPercs = [
 
 $(function(){
 	var params = {
-			users: 60000
+			users: 1000
 			// TODO
 			// number of experiments
 			// typology of experiments (good, bad, same)
@@ -45,9 +47,24 @@ $(function(){
 	//var expResults = simulate(params, expPercs);
 	//resultsView(expResults);
 	//var $container = $('#container');
-	var observedExpData = doIterations(params, expPercs, 5);
 
-	console.log(observedExpData);
+	var circle = new ProgressBar.Circle('#container', {
+		color: '#FCB03C',
+		strokeWidth: 3,
+		trailWidth: 1,
+		duration: 1500,
+		step: function(state, bar) {
+			bar.setText('Puppa');
+		}
+	});
+
+	var observedExpDataPromise = doIterations(params, expPercs, 5);
+
+	console.log(observedExpDataPromise);
+
+	circle.animate(1, function() {
+		circle.animate(0);
+	});
 
 	/*var statisticsData = statisticAnalysis(expData, 10);
 	console.log(statisticsData.frequencies);*/

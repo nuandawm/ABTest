@@ -21,6 +21,7 @@
   "dependencies": {
     "jquery": "~2.2.0",
     "underscore": "^1.8.3",
-    "d3": "3.5.16"
+    "d3": "3.5.16",
+    "progressbar.js": "^1.0.0"
   }
 }
