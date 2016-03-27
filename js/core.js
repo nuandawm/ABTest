@@ -7,23 +7,30 @@
  * @param num
  * @returns {Array}
  */
-var doIterations = function(params, expPercs, num){
+var IterationSeries = function (params, expPercs, num) {
   var expData = [];
-  for (var i=0; i<num; i++) {
-    var dataPromise = new Promise(function(resolve){
-      var sprint = new Sprint(params, expPercs);
+  this.params = params;
+  this.expPercs = expPercs;
+  this.maxIteration = num;
+  this.getExpData = function(){
+    return expData;
+  };
+};
+IterationSeries.prototype.doNext = function () {
+    var result = null;
+    if (this.getExpData().length < this.maxIteration) {
+      var sprint = new Sprint(this.params, this.expPercs);
       var expResults = sprint.simulate();
       var Aconversion = calculateConversion(expResults[0]['A'].visits,expResults[0]['A'].books);
       var Bconversion = calculateConversion(expResults[0]['B'].visits,expResults[0]['B'].books);
-      resolve({
+      result = {
         Aconversion: Aconversion,
         Bconversion: Bconversion,
         ratio: (Bconversion/Aconversion)
-      });
-    });
-    expData.push(dataPromise);
-  }
-  return expData;
+      };
+      this.getExpData().push(result);
+    }
+    return result;
 };
 
 var statisticAnalysis = function(expData, intervals){

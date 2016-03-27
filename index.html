@@ -38,7 +38,7 @@ var expPercs = [
 
 $(function(){
 	var params = {
-			users: 1000
+			users: 30000
 			// TODO
 			// number of experiments
 			// typology of experiments (good, bad, same)
@@ -48,23 +48,62 @@ $(function(){
 	//resultsView(expResults);
 	//var $container = $('#container');
 
+	var CompleteFrac = function (fracNum) {
+		var progressFraction = 0;
+		var progressIndex = 0;
+		var progressStep = 1 / fracNum;
+		this.increase = function(){
+			progressIndex += 1;
+			return {
+				index: progressIndex,
+				frac: (progressIndex == fracNum) ? 1 : (progressStep * progressIndex)
+			};
+		};
+	};
+
 	var circle = new ProgressBar.Circle('#container', {
 		color: '#FCB03C',
 		strokeWidth: 3,
 		trailWidth: 1,
-		duration: 1500,
-		step: function(state, bar) {
-			bar.setText('Puppa');
+		text: {
+			value: 'Loading...'
 		}
 	});
+	circle.text.style.textAlign = 'center';
 
-	var observedExpDataPromise = doIterations(params, expPercs, 5);
+	//var observedExpDataPromise = doIterations(params, expPercs, 20);
+	var iterationNum = 10;
 
-	console.log(observedExpDataPromise);
+	var completeFrac = new CompleteFrac(iterationNum);
 
-	circle.animate(1, function() {
-		circle.animate(0);
+	var iterationSeries = new IterationSeries(params, expPercs, iterationNum);
+
+	var recIterate = function(done){
+		var result = iterationSeries.doNext();
+		if (result) {
+			var complete = completeFrac.increase();
+			circle.animate(complete.frac, {
+				duration: 500,
+				step: function(state, circle, attachment) {
+					circle.setText('Iterations done: '+complete.index+'/'+iterationNum);
+				}
+			}, function(){
+				recIterate(done);
+			});
+		}
+		else
+			done();
+	}
+
+	recIterate(function(){
+		console.log('done!');
 	});
+
+	
+
+	/*circle.animate(1, function() {
+		circle.animate(0);
+	});*/
 
 	/*var statisticsData = statisticAnalysis(expData, 10);
 	console.log(statisticsData.frequencies);*/
