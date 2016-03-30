@@ -73,7 +73,7 @@ $(function(){
 
 	var iterationSeries = new IterationSeries(params, expPercs, iterationNum);
 
-	var recIterate = function(done){
+	/*var recIterate = function(done){
 		var result = iterationSeries.doNext();
 		if (result) {
 			var complete = completeFrac.increase();
@@ -88,12 +88,26 @@ $(function(){
 		}
 		else
 			done();
-	};
+	};*/
 
-	recIterate(function(){
+	var animatedLoading = function(doneFunc){
+		var complete = completeFrac.increase();
+		circle.animate(complete.frac, {
+			duration: 500,
+			step: function(state, circle) {
+				circle.setText('Iterations done: '+complete.index+'/'+iterationNum);
+			}
+		}, doneFunc);
+	};
+	
+	iterationSeries.doIterations(animatedLoading).then(function(){
+		console.log('done!');
+	});
+
+	/*recIterate(function(){
 		var statisticsData = statisticAnalysis(iterationSeries.getExpData(), 10);
 		console.log(statisticsData.frequencies);
-	});
+	});*/
 
 	/*var width = 600, height = 400;
 

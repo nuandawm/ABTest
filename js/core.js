@@ -15,6 +15,33 @@ var IterationSeries = function (params, expPercs, num) {
   this.getExpData = function(){
     return expData;
   };
+
+  for (var i=0; i<num; i++)
+    expData.push(i);
+};
+IterationSeries.prototype.doIterations = function (sleep) {
+  var that = this;
+  return this.getExpData().reduce(function(promise, el){
+    return promise.then(function(result){
+      var data = null;
+      var sprint = new Sprint(that.params, that.expPercs);
+      var expResults = sprint.simulate();
+      var Aconversion = calculateConversion(expResults[0]['A'].visits,expResults[0]['A'].books);
+      var Bconversion = calculateConversion(expResults[0]['B'].visits,expResults[0]['B'].books);
+      data = {
+        Aconversion: Aconversion,
+        Bconversion: Bconversion,
+        ratio: (Bconversion/Aconversion)
+      };
+      that.getExpData().push(data);
+
+      return new Promise(function(success){
+        sleep(function(){
+          success();
+        });
+      });
+    });
+  }, Promise.resolve(true));
 };
 IterationSeries.prototype.doNext = function () {
     var result = null;
